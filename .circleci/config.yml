@@ -19,13 +19,10 @@ jobs:
           command: |
             echo 'export TAG=latest' >> $BASH_ENV
             echo 'export IMAGE_NAME=simple-flask' >> $BASH_ENV 
-            virtualenv env
-            . env/bin/activate
             pip install --no-cache-dir -r requirements.txt
       - run:
           name: Build and push Docker image
           command: |
-            . env/bin/activate
             docker build -t lexmill99/$IMAGE_NAME:$TAG .
             echo $DOCKER_PWD | docker login -u lexmill99 --password-stdin
             docker push lexmill99/$IMAGE_NAME:$TAG
