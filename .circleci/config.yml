@@ -53,3 +53,4 @@ workflows:
   say-hello-workflow:
     jobs:
       - build-push-image
+      - update-k8-image
