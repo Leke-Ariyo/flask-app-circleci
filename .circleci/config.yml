@@ -3,8 +3,12 @@
 version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+
+orbs:
+  kubernetes: circleci/kubernetes@0.12.0
+
 jobs:
-  build-image:
+  build-push-image:
     # Specify the execution environment.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
 
@@ -27,10 +31,20 @@ jobs:
             docker build -t $IMAGE_NAME:$TAG .
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
             docker push $IMAGE_NAME:$TAG
+      - kubernetes/install
+      - run:
+          name: Test kubectl
+          command: kubectl
+      - kubernetes/install-kubeconfig:
+          kubeconfig: MY_KUBECONFIG_DATA
+      - run:
+          name: Test kubeconfig output
+          command: |
+            [[ -f $HOME/.kube/config && ! -z $HOME/.kube/config && $(<$HOME/.kube/config) == "test" ]]
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-      - build-image
+      - build-push-image
