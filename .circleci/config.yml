@@ -25,7 +25,7 @@ jobs:
           name: Build and push Docker image
           command: |
             docker build -t lexmill99/$IMAGE_NAME:$TAG .
-            echo $DOCKER_PWD | docker login -u lexmill99 --password-stdin
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
             docker push lexmill99/$IMAGE_NAME:$TAG
 
 # Invoke jobs via workflows
