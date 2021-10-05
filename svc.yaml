@@ -1,17 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
   labels:
     app: flask-app
   name: flask-app
+  namespace: canary-test
 spec:
   ports:
-  - port: 5000
+  - name: http
+    port: 80
     protocol: TCP
-    targetPort: 5000
+    targetPort: 80
   selector:
     app: flask-app
-  type: NodePort
+  sessionAffinity: None
+  type: ClusterIP
 status:
   loadBalancer: {}
