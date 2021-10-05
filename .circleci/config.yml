@@ -36,7 +36,7 @@ jobs:
           name: Test kubectl
           command: kubectl
       - kubernetes/install-kubeconfig:
-          kubeconfig: MY_KUBECONFIG_DATA
+          kubeconfig: KUBE_CONFIG
       - run:
           name: Test kubeconfig output
           command: |
