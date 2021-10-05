@@ -31,6 +31,11 @@ jobs:
             docker build -t $IMAGE_NAME:$TAG .
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
             docker push $IMAGE_NAME:$TAG
+
+  update-k8-image:
+    docker:
+      - image: cimg/base:stable
+    steps:
       - kubernetes/install
       - run:
           name: Test kubectl
