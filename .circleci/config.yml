@@ -31,11 +31,6 @@ jobs:
             docker build -t $IMAGE_NAME:$TAG .
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
             docker push $IMAGE_NAME:$TAG
-
-  update-k8-image:
-    docker:
-      - image: cimg/base:stable
-    steps:
       - kubernetes/install
       - run:
           name: Test kubectl
@@ -43,9 +38,9 @@ jobs:
       - kubernetes/install-kubeconfig:
           kubeconfig: KUBE_CONFIG
       - run:
-          name: Test kubeconfig output
+          name: Update image
           command: |
-            kubectl get pods
+            kubectl set image deployment/flask-app flask-app=$IMAGE_NAME:$TAG -n canary-test
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -53,4 +48,3 @@ workflows:
   say-hello-workflow:
     jobs:
       - build-push-image
-      - update-k8-image
